@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+<style>
+    html,
+    body {
+        margin: 0;
+        padding: 0;
+        width: 100%;
+        height: 100%;
+        background:#EBAF20;
+    }
+
+    canvas {
+        background: url('background.jpg') no-repeat;
+    }
+
+    img {
+        display: none;
+    }
+
+    #alerta {
+        padding:10px;
+        background: #999;
+        position: absolute;
+        right: 0;
+        color: black;
+        font-family: Arial, Helvetica, sans-serif;
+        display:none;
+        width:300px;
+    }
+</style>
+
+<body>
+    <div id="alerta">oi</div>
+    <img id="dog" src="dog.svg" />
+    <canvas id="myCanvas"></canvas>
+    <script>
+
+        let estaDentro = false;
+        let estavaDentro = false;
+        const canvas = document.getElementById("myCanvas");
+        const dogImg = document.getElementById("dog");
+        const alerta = document.getElementById("alerta");
+
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        const ctx = canvas.getContext("2d");
+
+        function draw() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            ctx.fillStyle = "#333"; //cinza
+            //              x   y   lar  alt
+            ctx.strokeRect(30, 150, 600, 230);
+        }
+        draw();
+
+        document.onmousemove = (event) => {
+            draw();
+
+            const coord = { x: event.clientX, y: event.clientY }
+            estaDentro = false;
+
+            ctx.fillStyle = "#F00"; //vermelho
+            if (coord.x > 30 && coord.x < 630) {
+                if (coord.y > 150 && coord.y < 380) {
+                    ctx.fillStyle = "#0F0"; //verde
+                    estavaDentro = true;
+                    estaDentro = true;
+                }
+            }
+            if (estavaDentro) {
+                if (!estaDentro) {
+                    estavaDentro = false;
+
+                    alerta.style.display = 'block';
+                }
+            }
+            if (estaDentro)
+            {
+                alerta.style.display = 'none';
+            }
+            alerta.innerHTML = `<p>A PORRA DO CACHORRO FUGIU <br />Coord: ${coord.x},${coord.y}</p>`;
+
+            //ctx.fillRect(coord.x, coord.y, 10, 10);
+            ctx.drawImage(dogImg, coord.x, coord.y, 32, 32);
+
+            //console.log(coord);
+        }
+
+    </script>
+</body>
+
+</html>
